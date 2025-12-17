@@ -269,10 +269,332 @@
       if(author) reviewText += ' by ' + author;
       reviewText += ' is';
 
+      if (roundedHalf <= 2) {
+        reviewText += ' a rough read. Very little comes together, and the weaker elements tend to overshadow anything it tries to do well.';
+      } 
+      else if (roundedHalf === 2.5) {
+        reviewText += ' uneven, but not without merit. While it struggles in places, there are moments that hint at a better book underneath the flaws.';
+      }
+      else if (roundedHalf === 3 || roundedHalf === 3.5) {
+        reviewText += ' a perfectly serviceable read. It has its highlights and its dull spots, landing squarely in the “fine, but forgettable” category.';
+      }
+      else if (roundedHalf === 4 || roundedHalf === 4.5) {
+        reviewText += ' a strong, enjoyable read that does a lot right. While it may not be life‑changing, it’s clearly well-crafted and easy to recommend.';
+      }
+      else {
+        reviewText += ' absolutely outstanding. This is the kind of book that grabs you completely and refuses to let go—memorable, compelling, and easily a favorite.';
+      }
+
+      document.getElementById("review").textContent = reviewText;
+      document.getElementById("modal").style.display = "block";
+    }
+
+    function getHalfStars(value) {
+      const fullStars = Math.floor(value);
+      const halfStar = (value - fullStars) === 0.5 ? 1 : 0;
+      const emptyStars = 5 - fullStars - halfStar;
+      let starsHTML = '';
+      for (let i = 0; i < fullStars; i++) starsHTML += '★';
+      if (halfStar) starsHTML += '⯪';
+      for (let i = 0; i < emptyStars; i++) starsHTML += '☆';
+      return starsHTML;
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+      resetForm();
+    }
+
+    function resetForm() {
+      document.querySelectorAll("input[type=text], input[type=range]").forEach(el => {
+        if(el.type === 'range') el.value = 3;
+        else el.value = '';
+      });
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById("modal");
+      if (event.target === modal) closeModal();
+    };
+  </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple Book Review App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #c94da7, #5e66d1, #3fa1d6);
+      min-height: 100vh;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: linear-gradient(180deg, #e0e0ff, #d0d0ff);
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .app-title {
+      font-size: 2.2em;
+      font-weight: bold;
+      background: linear-gradient(135deg, #c94da7, #5e66d1, #3fa1d6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .optional {
+      font-weight: normal;
+      font-size: 12px;
+      color: #555;
+      margin-left: 5px;
+    }
+
+    .slider-container {
+      margin-top: 6px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #555;
+      margin-top: 6px;
+    }
+
+    input[type="text"], button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #c94da7 0%, #5e66d1 50%, #3fa1d6 100%);
+      outline: none;
+      margin: 0;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 30px;
+      height: 16px;
+      background: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: -2px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: transform 0.1s ease;
+    }
+
+    input[type=range]::-moz-range-thumb {
+      width: 30px;
+      height: 16px;
+      background: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: transform 0.1s ease;
+    }
+
+    input[type=range]::-ms-thumb {
+      width: 30px;
+      height: 16px;
+      background: #ffffff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: transform 0.1s ease;
+    }
+
+    .generate-btn {
+      background: linear-gradient(135deg, #c94da7, #5e66d1, #3fa1d6);
+      color: white;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .reset-btn {
+      background-color: #e0e0e0;
+      margin-top: 10px;
+      transition: background-color 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background-color: #d0d0d0;
+    }
+
+    .stars {
+      font-size: 40px;
+      text-align: center;
+      background: linear-gradient(135deg, #c94da7, #5e66d1, #3fa1d6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 15px 0;
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { opacity: 0.7; }
+      to { opacity: 1; }
+    }
+
+    .review-text {
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background: linear-gradient(180deg, #ffffff, #f7f7ff);
+      margin: 10% auto;
+      padding: 25px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: popIn 0.3s ease-out;
+    }
+
+    .close {
+      float: right;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="app-title">Book Review Companion</h1>
+
+    <label for="title">Book Title <span class="optional">(optional)</span></label>
+    <input type="text" id="title" />
+
+    <label for="author">Author <span class="optional">(optional)</span></label>
+    <input type="text" id="author" />
+
+    <label for="characters">Characters</label>
+    <div class="slider-container">
+      <input type="range" id="characters" min="1" max="5" value="3" step="0.5" />
+      <div class="slider-labels"><span>Very Weak</span><span>Very Strong</span></div>
+    </div>
+
+    <label for="plot">Plot</label>
+    <div class="slider-container">
+      <input type="range" id="plot" min="1" max="5" value="3" step="0.5" />
+      <div class="slider-labels"><span>Very Weak</span><span>Very Strong</span></div>
+    </div>
+
+    <label for="writing">Writing Style</label>
+    <div class="slider-container">
+      <input type="range" id="writing" min="1" max="5" value="3" step="0.5" />
+      <div class="slider-labels"><span>Very Weak</span><span>Very Strong</span></div>
+    </div>
+
+    <label for="emotion">Emotional Impact</label>
+    <div class="slider-container">
+      <input type="range" id="emotion" min="1" max="5" value="3" step="0.5" />
+      <div class="slider-labels"><span>Very Weak</span><span>Very Strong</span></div>
+    </div>
+
+    <div style="margin-bottom: 30px;"></div>
+
+    <button class="generate-btn" onclick="generateReview()">Generate Review</button>
+    <button class="reset-btn" onclick="resetForm()">Reset</button>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Overall Rating</h2>
+        <div id="score"></div>
+        <div class="stars" id="stars"></div>
+        <div class="review-text" id="review"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generateReview() {
+      const title = document.getElementById("title").value || "This book";
+      const author = document.getElementById("author").value;
+      const ratings = {
+        characters: parseFloat(document.getElementById("characters").value),
+        plot: parseFloat(document.getElementById("plot").value),
+        writing: parseFloat(document.getElementById("writing").value),
+        emotion: parseFloat(document.getElementById("emotion").value)
+      };
+
+      const values = Object.values(ratings);
+      const sum = values.reduce((a,b)=>a+b,0);
+      const average = sum / values.length;
+      const roundedHalf = Math.round(average * 2) / 2;
+
+      document.getElementById("score").textContent = roundedHalf.toFixed(1) + " / 5";
+      document.getElementById("stars").innerHTML = getHalfStars(roundedHalf);
+
+      let reviewText = title;
+      if(author) reviewText += ' by ' + author;
+      reviewText += ' is';
+
       if(roundedHalf <= 2.5){
-        reviewText += ' a poor read. Elements such as ' + Object.entries(ratings)
+        reviewText += ' terrible. The ' + Object.entries(ratings)
           .filter(([_,v]) => v < 3)
-          .map(([k,_]) => k + ' were lacking').join(', ') + '.';
+          .map(([k,_]) => k + ': terrible').join(', ') + '.';
       } else if(roundedHalf === 3 || roundedHalf === 3.5){
         reviewText += ' an okay read: a little above average, with some enjoyable moments but not consistently impressive.';
       } else {
@@ -312,4 +634,4 @@
     };
   </script>
 </body>
-</html>
+</html> -->
